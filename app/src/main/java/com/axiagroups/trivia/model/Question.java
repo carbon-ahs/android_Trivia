@@ -20,11 +20,19 @@ public class Question {
         this.statement = statement;
     }
 
-    public boolean isAnswer() {
+    public boolean getAnswer() {
         return answer;
     }
 
     public void setAnswer(boolean answer) {
         this.answer = answer;
+    }
+
+    @Override
+    public String toString() {
+        return "Question{" +
+                "statement='" + statement + '\'' +
+                ", answer=" + answer +
+                '}';
     }
 }

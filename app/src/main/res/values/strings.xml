@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">Trivia</string>
+    <string name="titleTV_text">Trivia</string>
+    <string name="out_of_question">Question: 45/856</string>
+    <string name="false_button_text">False</string>
+    <string name="true_button_text">True</string>
+    <string name="next_button_text">Next</string>
+    <string name="previous_button_text">Previous</string>
+    <string name="carrect_answer">Previous</string>
+    <string name="wrong_answer">Previous</string>
+    <string name="question_counter">Question: %d/%d</string>
 </resources>
