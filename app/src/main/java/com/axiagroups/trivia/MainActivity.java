@@ -5,13 +5,13 @@ import androidx.databinding.DataBindingUtil;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import com.axiagroups.trivia.data.AnswerAsyncResponse;
 import com.axiagroups.trivia.data.Repository;
 import com.axiagroups.trivia.databinding.ActivityMainBinding;
 import com.axiagroups.trivia.model.Question;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,11 +67,13 @@ public class MainActivity extends AppCompatActivity {
         boolean answer = questionList.get(currentQuestionIndex).getAnswer();
         int snackMessageId = 0;
         if (userChoice == answer) {
-            snackMessageId = R.string.carrect_answer;
+            snackMessageId = R.string.correct_answer;
         }
         else {
             snackMessageId = R.string.wrong_answer;
         }
+
+        Snackbar.make(binding.cardView, snackMessageId, Snackbar.LENGTH_LONG).show();
     }
 
     private void updateCounter(ArrayList<Question> questionArrayList) {
