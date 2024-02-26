@@ -9,4 +9,6 @@
     <string name="correct_answer">Correct!</string>
     <string name="wrong_answer">Incorrect!</string>
     <string name="question_counter">Question: %d/%d</string>
+    <string name="high_score_text">High Score:\n<b>%d</b></string>
+    <string name="current_score_text">Score: <b>%d</b></string>
 </resources>

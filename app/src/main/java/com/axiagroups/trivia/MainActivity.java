@@ -3,6 +3,7 @@ package com.axiagroups.trivia;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,13 +23,27 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
+    private static String MESSAGE_ID = "axia_trivia";
+
+    private SharedPreferences sharedPreferences;
+
+    private int currentHighScore;
     private int currentQuestionIndex = 0;
+    private int currentScore = 0;
     List<Question> questionList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         binding = DataBindingUtil.setContentView(MainActivity.this, R.layout.activity_main);
+        binding.prevBtn.setEnabled(false);
+
+
+        sharedPreferences = getSharedPreferences(MESSAGE_ID, MODE_PRIVATE);
+        currentHighScore = sharedPreferences.getInt("high_score", 0);
+        binding.highScoreTV.setText(String.format(getString(R.string.high_score_text), currentHighScore));
+        binding.scoreTV.setText(String.format(getString(R.string.current_score_text), currentScore));
+//        showMsgTV.setText(value);
         questionList = new Repository().getQuestions(new AnswerAsyncResponse() {
             @Override
             public void processFinished(ArrayList<Question> questionArrayList) {
@@ -57,11 +72,13 @@ public class MainActivity extends AppCompatActivity {
         binding.trueBtn.setOnClickListener(v -> {
             checkAnswer(true);
             updateQuestionStatement();
+            updateScores();
         });
 
         binding.falseBtn.setOnClickListener(v -> {
             checkAnswer(false);
             updateQuestionStatement();
+            updateScores();
         });
 
 
@@ -74,10 +91,14 @@ public class MainActivity extends AppCompatActivity {
         int snackMessageId = 0;
         if (userChoice == answer) {
             snackMessageId = R.string.correct_answer;
+            currentScore = currentScore + 10;
             fadeAnimation();
         }
         else {
             snackMessageId = R.string.wrong_answer;
+            if(currentScore >= 5){
+                currentScore = currentScore - 5;
+            }
             shakeAnimation();
         }
 
@@ -94,6 +115,17 @@ public class MainActivity extends AppCompatActivity {
         String questionStatement = questionList.get(currentQuestionIndex).getStatement();
         updateCounter((ArrayList<Question>) questionList);
         binding.questionTV.setText(questionStatement);
+    }
+
+    private void updateScores() {
+        binding.scoreTV.setText(String.format(getString(R.string.current_score_text), currentScore));
+        if(currentScore > currentHighScore){
+            currentHighScore = currentScore;
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putInt("high_score", currentHighScore);
+            editor.apply(); // saving
+        }
+        binding.highScoreTV.setText(String.format(getString(R.string.high_score_text), currentHighScore));
     }
 
     private void shakeAnimation(){
