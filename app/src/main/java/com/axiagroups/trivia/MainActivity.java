@@ -3,8 +3,12 @@ package com.axiagroups.trivia;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import com.axiagroups.trivia.data.AnswerAsyncResponse;
@@ -52,10 +56,12 @@ public class MainActivity extends AppCompatActivity {
         
         binding.trueBtn.setOnClickListener(v -> {
             checkAnswer(true);
+            updateQuestionStatement();
         });
 
         binding.falseBtn.setOnClickListener(v -> {
             checkAnswer(false);
+            updateQuestionStatement();
         });
 
 
@@ -68,9 +74,11 @@ public class MainActivity extends AppCompatActivity {
         int snackMessageId = 0;
         if (userChoice == answer) {
             snackMessageId = R.string.correct_answer;
+            fadeAnimation();
         }
         else {
             snackMessageId = R.string.wrong_answer;
+            shakeAnimation();
         }
 
         Snackbar.make(binding.cardView, snackMessageId, Snackbar.LENGTH_LONG).show();
@@ -86,5 +94,56 @@ public class MainActivity extends AppCompatActivity {
         String questionStatement = questionList.get(currentQuestionIndex).getStatement();
         updateCounter((ArrayList<Question>) questionList);
         binding.questionTV.setText(questionStatement);
+    }
+
+    private void shakeAnimation(){
+        Animation shake = AnimationUtils.loadAnimation(MainActivity.this, R.anim.shake_animation);
+        binding.cardView.setAnimation(shake);
+
+        shake.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                binding.questionTV.setTextColor(Color.RED);
+//                binding.cardView.setB
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                binding.questionTV.setTextColor(Color.WHITE);
+//                currentQuestionIndex++;
+//                updateQuestionStatement();
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+    }
+
+    private void fadeAnimation(){
+        AlphaAnimation alphaAnimation = new AlphaAnimation(1.0f, 0.0f);
+        alphaAnimation.setDuration(300);
+        alphaAnimation.setRepeatCount(1);
+        alphaAnimation.setRepeatMode(Animation.REVERSE);
+
+        binding.cardView.setAnimation(alphaAnimation);
+
+        alphaAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                binding.questionTV.setTextColor(Color.GREEN);
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                binding.questionTV.setTextColor(Color.WHITE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
     }
 }
